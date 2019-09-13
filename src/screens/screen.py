@@ -1,3 +1,6 @@
+"""
+Abstract screen object.
+"""
 
 class Screen:
     """
@@ -7,6 +10,6 @@ class Screen:
     def display(self, screen):
         """
         :param screen: pygame.Surface
-        :returns: 0 on exit
+        :returns: Screen enum value
         """
         pass

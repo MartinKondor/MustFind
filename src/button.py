@@ -1,8 +1,11 @@
+"""
+Simple GUI button.
+"""
 from enum import Enum
 
 import pygame
 
-from consts import *
+from consts import BASE_FOLDER
 from config import CONFIG
 
 

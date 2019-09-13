@@ -1,3 +1,8 @@
+"""
+Configuration, where the settings are stored.
+
+Already declared as the ```CONFIG``` global variable.
+"""
 import os
 
 from pygame import locals as keys

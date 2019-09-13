@@ -3,9 +3,13 @@ Main file. Where the game starts.
 """
 import pygame
 
-from consts import *
+from consts import WINDOW_TITLE, Screens
 from config import CONFIG
 from screens.main_menu import MainMenuScreen
+from screens.game import GameScreen
+from screens.settings import SettingsScreen
+from screens.loading import LoadingScreen
+from resource_manager import RM
 
 
 if __name__ == '__main__':
@@ -21,21 +25,37 @@ if __name__ == '__main__':
     screen = pygame.display.set_mode((CONFIG.WINDOW_WIDTH, CONFIG.WINDOW_HEIGHT))
     pygame.display.set_caption(WINDOW_TITLE)
     pygame.mouse.set_visible(1)
+    RM.load(pygame)
 
-    gui_font = pygame.font.Font(BASE_FOLDER + 'fonts/knewave.ttf', CONFIG.CHARACTER_SIZE)
-
-    # Loading screens
-    main_menu = MainMenuScreen(gui_font)
+    # Loading the current screen
+    current_screen_enum = Screens.LOADING
+    last_screen_enum = Screens.LOADING
+    current_screen = LoadingScreen()
 
     # Main loop
     exited = False
+
     while not exited:
         for event in pygame.event.get():
             if event.type == pygame.locals.QUIT:
                 exited = True
+                break
 
-        if main_menu.display(screen) == 0:
+        current_screen_enum = current_screen.display(screen)
+
+        if current_screen_enum == Screens.EXIT:
             exited = True
+        elif current_screen_enum != last_screen_enum:
+            last_screen_enum = current_screen_enum
+            
+            if current_screen_enum == Screens.LOADING:
+                current_screen = LoadingScreen()
+            elif current_screen_enum == Screens.MAIN_MENU:
+                current_screen = MainMenuScreen()
+            elif current_screen_enum == Screens.GAME:
+                current_screen = GameScreen()
+            elif current_screen_enum == Screens.SETTINGS:
+                current_screen = SettingsScreen()
 
         pygame.display.flip()
 
