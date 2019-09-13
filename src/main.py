@@ -3,7 +3,7 @@ Main file. Where the game starts.
 """
 import pygame
 
-from consts import WINDOW_TITLE, Screens
+from consts import WINDOW_TITLE, MAP_FOLDER, Screens
 from config import CONFIG
 from screens.main_menu import MainMenuScreen
 from screens.game import GameScreen
@@ -20,6 +20,7 @@ if __name__ == '__main__':
         print('ERROR: sounds are disabled')
         exit(1)
 
+    
     # Starting the game
     pygame.init()
     screen = pygame.display.set_mode((CONFIG.WINDOW_WIDTH, CONFIG.WINDOW_HEIGHT))
@@ -27,10 +28,12 @@ if __name__ == '__main__':
     pygame.mouse.set_visible(1)
     RM.load(pygame)
 
+
     # Loading the current screen
     current_screen_enum = Screens.LOADING
     last_screen_enum = Screens.LOADING
     current_screen = LoadingScreen()
+
 
     # Main loop
     exited = False

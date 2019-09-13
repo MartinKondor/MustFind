@@ -16,5 +16,9 @@ class Screens(Enum):
 
 VERSION = '0.0.1-beta'
 BASE_FOLDER = os.getcwd() + '/bin/'
+
+MAP_FOLDER = BASE_FOLDER + 'maps/'
+TILESET_FOLDER = BASE_FOLDER + 'tilesets/'
+
 WINDOW_TITLE = 'Must find (' + VERSION + ')'
 GRAVITY_CONST = 0.375

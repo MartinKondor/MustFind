@@ -4,7 +4,7 @@ Main menu screen.
 from .screen import Screen
 from consts import Screens
 from config import CONFIG
-from button import Button, ButtonState
+from gui.button import Button, ButtonState
 from resource_manager import RM
 
 
