@@ -19,7 +19,7 @@ class SettingsScreen(Screen):
         #self.KEY_SHOOT
         #self.KEY_ROLL
         #self.KEY_AIM_LOCK
-
+        
         self.back_button = SimpleButton(50, CONFIG.WINDOW_HEIGHT - 4 * CONFIG.CHARACTER_SIZE, label='BACK')
 
     def display(self, screen, prev_screen=None):
