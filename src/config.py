@@ -21,7 +21,7 @@ class Config:
         self.WINDOW_WIDTH = 800
         self.WINDOW_HEIGHT = 600
         self.FPS_LIMIT = 60
-        self.CHARACTER_SIZE = 12
+        self.CHARACTER_SIZE = 17
         self.SKIN_FILENAME = "media/base.png"
 
         # Keyboard configuration
