@@ -47,8 +47,6 @@ if __name__ == '__main__':
         if current_screen_enum == Screens.EXIT:
             exited = True
         elif current_screen_enum != last_screen_enum:
-            last_screen_enum = current_screen_enum
-
             if current_screen_enum == Screens.LOADING:
                 current_screen = LoadingScreen()
             elif current_screen_enum == Screens.MAIN_MENU:
@@ -56,7 +54,9 @@ if __name__ == '__main__':
             elif current_screen_enum == Screens.GAME:
                 current_screen = GameScreen()
             elif current_screen_enum == Screens.SETTINGS:
-                current_screen = SettingsScreen()
+                current_screen = SettingsScreen(last_screen_enum)
+
+            last_screen_enum = current_screen_enum
 
         pygame.display.update()
         pygame.display.flip()

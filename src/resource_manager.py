@@ -13,9 +13,11 @@ class ResourceManager:
 
     def __init__(self):
         self.gui_font = None
+        self.readable_font = None
 
     def load(self, pygame):
         self.gui_font = pygame.font.Font(BASE_FOLDER + 'fonts/knewave.ttf', CONFIG.CHARACTER_SIZE)
+        self.readable_font = pygame.font.Font(BASE_FOLDER + 'fonts/FreeSans.ttf', CONFIG.CHARACTER_SIZE)
 
 
 RM = ResourceManager()

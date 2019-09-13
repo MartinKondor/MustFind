@@ -65,7 +65,9 @@ class Button:
 
 class SimpleButton:
 
-    def __init__(self, x_pos, y_pos, label, width=None, height=None, font_color=(37, 37, 37), outline_color=(50, 50, 200), outline_thickness=4, font_family=None):
+    def __init__(self, x_pos, y_pos, label, width=None, height=None,
+                font_color=(240, 240, 255), outline_color=(200, 200, 255),
+                outline_thickness=4, font_family=None):
         self.state = ButtonState.NORMAL
         self.x_pos = x_pos
         self.y_pos = y_pos
@@ -77,10 +79,18 @@ class SimpleButton:
         self.outline_color = outline_color
         self.clicked_outline_color = (255 - outline_color[0], 255 - outline_color[1], 255 - outline_color[2])
 
-        hover_font_color = (255 - font_color[0], 255 - font_color[1], 255 - font_color[2])
-        self.label_sprite = font_family.render(label, 1, font_color) if font_family is not None else RM.gui_font.render(label, 1, font_color)
-        self.hover_label_sprite = font_family.render(label, 1, hover_font_color) if font_family is not None else RM.gui_font.render(label, 1, hover_font_color)
+        self.font_color = font_color
+        self.hover_font_color = (255 - font_color[0], 255 - font_color[1], 255 - font_color[2])
+        self.label_sprite = None
+        self.hover_label_sprite = None
+        self.set_label(label, font_family)
      
+    def set_label(self, label, font_family=None):
+        self.label_sprite = font_family.render(label, 1, self.font_color) \
+            if font_family is not None else RM.gui_font.render(label, 1, self.font_color)
+        self.hover_label_sprite = font_family.render(label, 1, self.hover_font_color) \
+            if font_family is not None else RM.gui_font.render(label, 1, self.hover_font_color)
+
     def display(self, screen):
         mouse_pos = pygame.mouse.get_pos()
 

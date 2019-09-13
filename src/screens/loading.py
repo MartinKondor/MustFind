@@ -14,7 +14,7 @@ class LoadingScreen(Screen):
 
     def __init__(self, gui_img_path=IMAGE_FOLDER + 'gui.png'):
         self.time_counter = time.time()
-        self.loading_screen_screentime = 10.0
+        self.loading_screen_screentime = 0
         self.logo = pygame.image.load(IMAGE_FOLDER + 'logo.png')
         
         # Loading sprite parts
@@ -39,7 +39,7 @@ class LoadingScreen(Screen):
 
         screen.blit(self.loading_slider_first, (CONFIG.WINDOW_WIDTH // 2, CONFIG.WINDOW_HEIGHT // 2))
         screen.blit(self.loading_slider_center, (CONFIG.WINDOW_WIDTH // 2 + 32, CONFIG.WINDOW_HEIGHT // 2))
-        screen.blit(self.loading_slider_last, (CONFIG.WINDOW_WIDTH // 2 + 2 * 32, CONFIG.WINDOW_HEIGHT // 2))
+        screen.blit(self.loading_slider_center, (CONFIG.WINDOW_WIDTH // 2 + 2 * 32, CONFIG.WINDOW_HEIGHT // 2))
 
         if time.time() - self.time_counter >= self.loading_screen_screentime:
             return Screens.MAIN_MENU

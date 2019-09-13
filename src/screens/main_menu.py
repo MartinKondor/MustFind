@@ -16,11 +16,16 @@ class MainMenuScreen(Screen):
         self.logo = self.logo = pygame.image.load(IMAGE_FOLDER + 'logo.png')
         self.logo_size = self.logo.get_rect().size
 
-        button_margin = 15
-        self.singleplayer_button = SimpleButton(96, 200, 'SINGLE PLAYER')
-        self.multiplayer_button = SimpleButton(96, 232 + button_margin, 'MULTI PLAYER')
-        self.settings_button = SimpleButton(96, 264 + 2 * button_margin, 'SETTINGS')
-        self.exit_button = SimpleButton(96, 296 + 3 * button_margin, 'EXIT')
+        button_margin = 50
+        #self.singleplayer_button = SimpleButton(96, 200, 'SINGLE PLAYER')
+        #self.multiplayer_button = SimpleButton(96, 232 + button_margin, 'MULTI PLAYER')
+        #self.settings_button = SimpleButton(96, 264 + 2 * button_margin, 'SETTINGS')
+        #self.exit_button = SimpleButton(96, 296 + 3 * button_margin, 'EXIT')
+        
+        self.singleplayer_button = SimpleButton(96, CONFIG.WINDOW_HEIGHT - 96 - 3 * button_margin, 'SINGLE PLAYER')
+        self.multiplayer_button = SimpleButton(96, CONFIG.WINDOW_HEIGHT - 96 - 2 * button_margin, 'MULTI PLAYER')
+        self.settings_button = SimpleButton(96, CONFIG.WINDOW_HEIGHT - 96 - button_margin, 'SETTINGS')
+        self.exit_button = SimpleButton(96, CONFIG.WINDOW_HEIGHT - 96, 'EXIT')
 
     def display(self, screen):
         self.singleplayer_button.display(screen)
