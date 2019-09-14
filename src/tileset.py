@@ -13,6 +13,7 @@ class Tileset:
 
     def __init__(self):
         self.mask = []
+        self.tiles = []
         self.image = None
 
     def load_mask(self, file_name):
@@ -55,3 +56,11 @@ class Tileset:
         # Load tileset files from cache
         self.load_mask(TILESET_FOLDER + 'cache/mask.msk')
         self.image = pygame.image.load(TILESET_FOLDER + 'cache/image.png')
+
+        # Load the tileset matrix
+        img_size = self.image.get_size()
+
+        for j in range(int(img_size[1] / 32)):
+            for i in range(10):
+                self.image.set_clip(pygame.Rect(i * 32, j * 32, 32, 32))
+                self.tiles.append(self.image.subsurface(self.image.get_clip()))

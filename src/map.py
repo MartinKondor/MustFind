@@ -1,9 +1,12 @@
 """
 Map classes for loading and storing maps/tilesets.
 """
+import pygame
+
 from consts import TILESET_FOLDER
 from layer import Layer
 from tileset import Tileset
+from config import CONFIG
 
 
 class Map:
@@ -78,3 +81,22 @@ class Map:
             # Parse in a tilerow
             tile_row = [int(val.strip()) for val in line.strip().split(',') if val]
             current_layer.tiles.append(tile_row)
+
+    def draw_background(self, screen, player):
+        window_size = screen.get_size()
+        layer_offset_x = 0
+        layer_offset_y = 0
+
+        for layer_index in range(0, 5):
+            for j, tile_row in enumerate(self.layers[layer_index].tiles):
+                for i, tile_index in enumerate(tile_row):
+                    if tile_index == 0:
+                        continue
+
+                # rect = pygame.Rect((j * 32) - layer_offset_x, (i * 32) - layer_offset_y, CONFIG.WINDOW_WIDTH, CONFIG.WINDOW_HEIGHT)
+                rect = pygame.Rect(j * 32, i * 32, window_size[0], window_size[1])
+                screen.blit(self.tileset.tiles[tile_index], rect)
+
+
+    def draw_foreground(self, screen, entity):
+        pass

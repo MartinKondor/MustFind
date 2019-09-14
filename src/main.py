@@ -41,7 +41,10 @@ if __name__ == '__main__':
                 exited = True
                 break
 
-        screen.fill(BG_COLOR)
+        if current_screen_enum == Screens.GAME:
+            screen.fill((0, 0, 0))
+        else:
+            screen.fill(BG_COLOR)
         current_screen_enum = current_screen.display(screen)
 
         if current_screen_enum == Screens.EXIT:
