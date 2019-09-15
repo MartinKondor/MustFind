@@ -82,21 +82,49 @@ class Map:
             tile_row = [int(val.strip()) for val in line.strip().split(',') if val]
             current_layer.tiles.append(tile_row)
 
-    def draw_background(self, screen, player):
-        window_size = screen.get_size()
-        layer_offset_x = 0
-        layer_offset_y = 0
-
-        for layer_index in range(0, 5):
-            for j, tile_row in enumerate(self.layers[layer_index].tiles):
-                for i, tile_index in enumerate(tile_row):
-                    if tile_index == 0:
+    def draw(self, screen, player, from_layer_index=0, to_layer_index=5):
+        """
+        Draw the tiles what the user can see.
+        """
+        for layer_index in range(from_layer_index, to_layer_index):
+            for y, tiles in enumerate(self.layers[layer_index].tiles):
+                for x, tile in enumerate(tiles):
+                    if tile == 0:
                         continue
 
-                # rect = pygame.Rect((j * 32) - layer_offset_x, (i * 32) - layer_offset_y, CONFIG.WINDOW_WIDTH, CONFIG.WINDOW_HEIGHT)
-                rect = pygame.Rect(j * 32, i * 32, window_size[0], window_size[1])
-                screen.blit(self.tileset.tiles[tile_index], rect)
+                    screen.blit(self.tileset.tiles[tile], (x * 32, y * 32))
 
+        """
+        start_x = 0
+        start_y = 0
+        end_x = 0
+        end_y = 0
+        layer_offset_x = 0
+        layer_offset_y = 0
+        inCamX = 0
+        inCamY = 0
 
-    def draw_foreground(self, screen, entity):
-        pass
+        for layer_index in range(from_layer_index, to_layer_index):
+            layer_offset_x = inCamX * (self.layers[layer_index].x_speed - 1)
+            layer_offset_y = inCamY * (self.layers[layer_index].y_speed - 1)
+
+            start_x = int((inCamX + layer_offset_x) / 32 - 1)
+            if start_x < 0:
+                start_x = 0
+
+            start_y = int((inCamY + layer_offset_y) / 32 - 1)
+            if start_y < 0:
+                start_y = 0
+
+            end_x = int((inCamX + CONFIG.WINDOW_WIDTH + layer_offset_x) / 32)
+            if end_x > len(self.layers[layer_index].tiles[0]) - 1:
+                end_x = len(self.layers[layer_index].tiles[0]) - 1
+            
+            end_y = int((inCamY + CONFIG.WINDOW_HEIGHT + layer_offset_y) / 32)
+            if end_y > len(self.layers[layer_index].tiles) - 1:
+                end_y = len(self.layers[layer_index].tiles) - 1
+
+            for y in range(start_y, end_y):
+                for x in range(start_x, end_x):
+                    screen.blit(self.tileset.tiles[y][x], (x * 32, y * 32))
+        """
