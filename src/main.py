@@ -1,6 +1,8 @@
 """
 Main file. Where the game starts.
 """
+import time
+
 import pygame
 
 from consts import Screens, WINDOW_TITLE, BG_COLOR, IMAGE_FOLDER
@@ -10,6 +12,17 @@ from screens.game import GameScreen
 from screens.settings import SettingsScreen
 from screens.loading import LoadingScreen
 from resource_manager import RM
+
+
+
+def check_events():
+    """
+    :returns bool: false if game must be exited
+    """
+    for event in pygame.event.get():
+        if event.type == pygame.locals.QUIT:
+            return False
+    return True
 
 
 if __name__ == '__main__':
@@ -32,14 +45,13 @@ if __name__ == '__main__':
     last_screen_enum = Screens.LOADING
     current_screen = LoadingScreen()
 
-    # Main loop
-    exited = False
+    fps = 0
+    fps_counter = 0
+    start_time = time.time()
 
-    while not exited:
-        for event in pygame.event.get():
-            if event.type == pygame.locals.QUIT:
-                exited = True
-                break
+    # Main loop
+    while current_screen_enum != Screens.EXIT and check_events():
+        check_events()
 
         if current_screen_enum == Screens.GAME:
             screen.fill((0, 0, 0))
@@ -47,9 +59,7 @@ if __name__ == '__main__':
             screen.fill(BG_COLOR)
         current_screen_enum = current_screen.display(screen)
 
-        if current_screen_enum == Screens.EXIT:
-            exited = True
-        elif current_screen_enum != last_screen_enum:
+        if current_screen_enum != last_screen_enum:
             if current_screen_enum == Screens.LOADING:
                 current_screen = LoadingScreen()
             elif current_screen_enum == Screens.MAIN_MENU:
@@ -60,6 +70,12 @@ if __name__ == '__main__':
                 current_screen = SettingsScreen(last_screen_enum)
 
             last_screen_enum = current_screen_enum
+
+        fps_counter += 1
+        fps = fps_counter / (time.time() - start_time)
+        if int(fps) > CONFIG.FPS_LIMIT:
+            # Slow down
+            time.sleep(0.01)
 
         pygame.display.update()
         pygame.display.flip()

@@ -21,7 +21,7 @@ class Config:
         # Set default attributes
         self.WINDOW_WIDTH = 800
         self.WINDOW_HEIGHT = 600
-        self.FPS_LIMIT = 60
+        self.FPS_LIMIT = 30
         self.CHARACTER_SIZE = 17
 
         # Keyboard configuration

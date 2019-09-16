@@ -28,7 +28,6 @@ class GameScreen(Screen):
         self.player = Player()
         self.bot = Bot()
         self.in_game_menu_bg = None
-        self.esc_key_held = False
 
         # In game menu elements
         button_margin = 50
@@ -50,7 +49,6 @@ class GameScreen(Screen):
             return Screens.MAIN_MENU
         elif self.in_game_resume_button.state == ButtonState.RELEASED:
             self.subscreen = GameSubScreen.GAME
-            self.esc_key_held = True
             return Screens.GAME
         return Screens.GAME
 
