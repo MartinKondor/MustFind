@@ -86,19 +86,18 @@ class Map:
         """
         Draw the tiles what the user can see.
         """
-        """
         for layer_index in range(from_layer_index, to_layer_index):
             for y, tiles in enumerate(self.layers[layer_index].tiles):
                 for x, tile in enumerate(tiles):
                     if tile == 0:
                         continue
 
-                    screen.blit(self.tileset.tiles[tile], (x * 32 - player.camera_x, y * 32 - player.camera_y))
+                    screen.blit(self.tileset.tiles[tile],
+                        (x * 32 - player.camera_x * self.layers[layer_index].x_speed, y * 32 - player.camera_y + self.layers[layer_index].y_speed))
         """
         for layer_index in range(from_layer_index, to_layer_index):
-            
-            layer_offset_x = player.camera_x * (self.layers[layer_index].x_speed - 1)
-            layer_offset_y = player.camera_y * (self.layers[layer_index].y_speed - 1)
+            layer_offset_x = player.camera_x# * self.layers[layer_index].x_speed
+            layer_offset_y = player.camera_y# * self.layers[layer_index].y_speed
 
             start_x = int((player.camera_x + layer_offset_x) / 32 - 1)
             if start_x < 0:
@@ -121,7 +120,8 @@ class Map:
                     if self.layers[layer_index].tiles[y][x] == 0:
                         continue
 
-                    screen.blit(self.tileset.tiles[self.layers[layer_index].tiles[y][x]], (x * 32 - player.camera_x, y * 32 - player.camera_y))
+                    screen.blit(self.tileset.tiles[self.layers[layer_index].tiles[y][x]], (x * 32 - layer_offset_x, y * 32 - layer_offset_y))
+        """
 
     @staticmethod 
     def get_tile(map, layer, x_tile, y_tile):
@@ -145,7 +145,7 @@ class Map:
             tile_at_coords = Map.get_tile(map, layer, x_pos / 32, y_pos / 32)
             x_tile = tile_at_coords % 10
             y_tile = int(tile_at_coords / 10)
-            return map.tileset.mask[y_tile * 32 + y_pos % 32][x_tile * 32 + x_pos % 32]
+            return bool(map.tileset.mask[y_tile * 32 + y_pos % 32][x_tile * 32 + x_pos % 32])
         return True
 
     @staticmethod
