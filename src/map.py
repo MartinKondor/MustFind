@@ -87,13 +87,15 @@ class Map:
         Draw the tiles what the user can see.
         """
         for layer_index in range(from_layer_index, to_layer_index):
+            layer_offset_x = player.camera_x * self.layers[layer_index].x_speed
+            layer_offset_y = player.camera_y * self.layers[layer_index].y_speed
+
             for y, tiles in enumerate(self.layers[layer_index].tiles):
                 for x, tile in enumerate(tiles):
                     if tile == 0:
                         continue
 
-                    screen.blit(self.tileset.tiles[tile],
-                        (x * 32 - player.camera_x * self.layers[layer_index].x_speed, y * 32 - player.camera_y * self.layers[layer_index].y_speed))
+                    screen.blit(self.tileset.tiles[tile], (x * 32 - layer_offset_x, y * 32 - layer_offset_y))
         """
         for layer_index in range(from_layer_index, to_layer_index):
             layer_offset_x = player.camera_x# * self.layers[layer_index].x_speed

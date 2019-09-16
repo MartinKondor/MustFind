@@ -54,11 +54,17 @@ class Player:
         pressed_keys = pygame.key.get_pressed()
 
         # Check if the bottom of the player is masked
-        obstdwn = Map.is_masked_h_line(map, 4, self.x_pos, self.y_pos + self.height / 2, self.width / 2)
+        obstdwn = Map.is_masked_h_line(map, 4, self.x_pos, self.y_pos + self.height / 2 - 4, self.width / 2)
         if obstdwn:
             self.y_speed = 0
+            self.jump_count = 0
         elif not obstdwn and self.y_speed < 20:  # Gravity
             self.y_speed += GRAVITY_CONST
+
+        # Jumping
+        if self.jump_count < self.jump_limit and pressed_keys[CONFIG.KEY_UP]:
+            self.y_speed -= self.jump_power
+            self.jump_count += 1
 
         # Move on keypress, but slow down if no key is pressed
         if pressed_keys[CONFIG.KEY_RIGHT]:
@@ -75,7 +81,7 @@ class Player:
             self.x_speed = self.max_speed
 
         # Check the sides of the player
-        
+        # print(Map.masked_top_v_area(map, 4, self.x_pos, self.y_pos, self.height, self.width))
 
         #if self.x_pos <= 0:
         #    self.x_speed = BASE_SPEED
@@ -89,7 +95,7 @@ class Player:
 
         if self.x_speed < 0:
             self.direction = MovingDirection.LEFT
-        elif self.x_speed >= 0:
+        if self.x_speed >= 0:
             self.direction = MovingDirection.RIGHT
 
         screen.blit(self.animation_frames[self.direction][self.animation_index], (self.x_pos - self.camera_x - self.width / 2, self.y_pos - self.camera_y - self.height / 2,))
