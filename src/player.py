@@ -26,6 +26,7 @@ class Player:
         self.camera_y = y_pos
         self.width = 95
         self.height = 159
+        self.max_speed = 15
 
         self.jump_count = 0
         self.jump_limit = 1
@@ -53,15 +54,11 @@ class Player:
         pressed_keys = pygame.key.get_pressed()
 
         # Check if the bottom of the player is masked
-        if Map.is_masked_h_line(map, 4, self.x_pos, self.y_pos + self.height / 2, self.width / 2):
+        obstdwn = Map.is_masked_h_line(map, 4, self.x_pos, self.y_pos + self.height / 2, self.width / 2)
+        if obstdwn:
             self.y_speed = 0
-        elif self.y_speed < 5:  # Gravity
+        elif not obstdwn and self.y_speed < 20:  # Gravity
             self.y_speed += GRAVITY_CONST
-
-        # Check the sides of the player
-        #if Map.masked_top_v_line(map, 4, self.x_pos, self.y_pos, self.height) or\
-        #    Map.masked_top_v_line(map, 4, self.x_pos + self.width, self.y_pos, self.height):
-        #    self.x_speed = 0
 
         # Move on keypress, but slow down if no key is pressed
         if pressed_keys[CONFIG.KEY_RIGHT]:
@@ -70,14 +67,30 @@ class Player:
             self.x_speed -= BASE_SPEED
         else:
             if self.x_speed != 0 and self.x_speed < 0:
-                self.x_speed += BASE_SPEED
+                self.x_speed += 2 * BASE_SPEED
             elif self.x_speed != 0 and self.x_speed > 0:
-                self.x_speed -= BASE_SPEED
+                self.x_speed -= 2 * BASE_SPEED
+        
+        if self.x_speed > self.max_speed:
+            self.x_speed = self.max_speed
+
+        # Check the sides of the player
+        
+
+        #if self.x_pos <= 0:
+        #    self.x_speed = BASE_SPEED
+        #elif self.x_pos >= len(map.layers[4].tiles[0]) - 1:
+        #    self.x_speed = -BASE_SPEED
 
         self.x_pos += self.x_speed
         self.y_pos += self.y_speed
         self.camera_x = self.x_pos - CONFIG.WINDOW_WIDTH / 2
         self.camera_y = self.y_pos - CONFIG.WINDOW_HEIGHT / 2
+
+        if self.x_speed < 0:
+            self.direction = MovingDirection.LEFT
+        elif self.x_speed >= 0:
+            self.direction = MovingDirection.RIGHT
 
         screen.blit(self.animation_frames[self.direction][self.animation_index], (self.x_pos - self.camera_x - self.width / 2, self.y_pos - self.camera_y - self.height / 2,))
         self.animation_index += 1
