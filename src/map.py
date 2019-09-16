@@ -86,45 +86,128 @@ class Map:
         """
         Draw the tiles what the user can see.
         """
+        """
         for layer_index in range(from_layer_index, to_layer_index):
             for y, tiles in enumerate(self.layers[layer_index].tiles):
                 for x, tile in enumerate(tiles):
                     if tile == 0:
                         continue
 
-                    screen.blit(self.tileset.tiles[tile], (x * 32, y * 32))
-
+                    screen.blit(self.tileset.tiles[tile], (x * 32 - player.camera_x, y * 32 - player.camera_y))
         """
-        start_x = 0
-        start_y = 0
-        end_x = 0
-        end_y = 0
-        layer_offset_x = 0
-        layer_offset_y = 0
-        inCamX = 0
-        inCamY = 0
-
         for layer_index in range(from_layer_index, to_layer_index):
-            layer_offset_x = inCamX * (self.layers[layer_index].x_speed - 1)
-            layer_offset_y = inCamY * (self.layers[layer_index].y_speed - 1)
+            
+            layer_offset_x = player.camera_x * (self.layers[layer_index].x_speed - 1)
+            layer_offset_y = player.camera_y * (self.layers[layer_index].y_speed - 1)
 
-            start_x = int((inCamX + layer_offset_x) / 32 - 1)
+            start_x = int((player.camera_x + layer_offset_x) / 32 - 1)
             if start_x < 0:
                 start_x = 0
 
-            start_y = int((inCamY + layer_offset_y) / 32 - 1)
+            start_y = int((player.camera_y + layer_offset_y) / 32 - 1)
             if start_y < 0:
                 start_y = 0
 
-            end_x = int((inCamX + CONFIG.WINDOW_WIDTH + layer_offset_x) / 32)
+            end_x = int((player.camera_x + CONFIG.WINDOW_WIDTH + layer_offset_x) / 32)
             if end_x > len(self.layers[layer_index].tiles[0]) - 1:
                 end_x = len(self.layers[layer_index].tiles[0]) - 1
             
-            end_y = int((inCamY + CONFIG.WINDOW_HEIGHT + layer_offset_y) / 32)
+            end_y = int((player.camera_y + CONFIG.WINDOW_HEIGHT + layer_offset_y) / 32)
             if end_y > len(self.layers[layer_index].tiles) - 1:
                 end_y = len(self.layers[layer_index].tiles) - 1
 
-            for y in range(start_y, end_y):
-                for x in range(start_x, end_x):
-                    screen.blit(self.tileset.tiles[y][x], (x * 32, y * 32))
+            for y in range(start_y, end_y):  # len(self.layers[layer_index].tiles)
+                for x in range(start_x, end_x):  # len(self.layers[layer_index].tiles[y])
+                    if self.layers[layer_index].tiles[y][x] == 0:
+                        continue
+
+                    screen.blit(self.tileset.tiles[self.layers[layer_index].tiles[y][x]], (x * 32 - player.camera_x, y * 32 - player.camera_y))
+
+    @staticmethod 
+    def get_tile(map, layer, x_tile, y_tile):
         """
+        :returns int: the tileid of the tile at x_tile and y_tile
+        """
+        x_tile, y_tile = int(x_tile), int(y_tile)
+
+        if x_tile >= 0 and x_tile < (len(map.layers[layer].tiles[0]) - 1) and y_tile >= 0 and y_tile < (len(map.layers[layer].tiles) - 1):
+            return map.layers[layer].tiles[y_tile][x_tile]
+        return 0
+
+    @staticmethod
+    def is_masked_pixel(map, layer, x_pos, y_pos):
+        """
+        :returns bool: true if a pixel in map is masked in layer at (x_pos, yPos)
+        """
+        x_pos, y_pos = int(x_pos), int(y_pos)
+
+        if x_pos >= 0 and x_pos < (len(map.layers[layer].tiles[0]) - 1) * 32 and y_pos >= 0 and y_pos < (len(map.layers[layer].tiles) - 1) * 32:
+            tile_at_coords = Map.get_tile(map, layer, x_pos / 32, y_pos / 32)
+            x_tile = tile_at_coords % 10
+            y_tile = int(tile_at_coords / 10)
+            return map.tileset.mask[y_tile * 32 + y_pos % 32][x_tile * 32 + x_pos % 32]
+        return True
+
+    @staticmethod
+    def is_masked_h_line(map, layer, x_pos, y_pos, length):
+        """
+        :returns bool: true if any pixel in map is masked in layer from (x_pos, y_pos) to (x_pos + length, y_pos)
+        """
+        x_pos, y_pos, length = int(x_pos), int(y_pos), int(length)
+
+        if length >= 0: 
+            for i in range(x_pos, x_pos + length):
+                if Map.is_masked_pixel(map, layer, i, y_pos):
+                    return True
+        else:
+            for i in range(x_pos - length, x_pos, -1):
+                if Map.is_masked_pixel(map, layer, i, y_pos):
+                    return True
+        return False
+
+    @staticmethod
+    def masked_top_v_line(map, layer, x_pos, y_pos, length):
+        """
+        :returns int: the index of the topmost masked pixel in inMap in layer from (x_pos, y_pos) to (x_pos, y_pos + length)
+        """
+        x_pos, y_pos, length = int(x_pos), int(y_pos), int(length)
+
+        for i in range(length):
+            if Map.is_masked_pixel(map, layer, x_pos, y_pos + i):
+                return i
+        return length
+
+    @staticmethod
+    def masked_top_v_area(map, layer, x_pos, y_pos, h_length, v_length):
+        """
+        :returns int: the index of the topmost horizontal line it finds a masked pixel in
+        """
+        x_pos, y_pos, h_length, v_length = int(x_pos), int(y_pos), int(h_length), int(v_length)
+
+        if v_length >= 0:
+            for i in range(v_length):
+                if Map.is_masked_h_line(map, layer, x_pos, y_pos + i, h_length):
+                    return i
+        else:
+            for i in range(v_length, 0, -1):
+                if Map.is_masked_h_line(map, layer, x_pos, y_pos + i, h_length):
+                    return i
+        return v_length
+
+    @staticmethod
+    def masked_first_h_area(map, layer, x_pos, y_pos, h_length, v_length):
+        """
+        :returns int: the index of the first vertical line it finds a masked pixel in
+        """
+        x_pos, y_pos, h_length, v_length = int(x_pos), int(y_pos), int(h_length), int(v_length)
+
+        if h_length >= 0:
+            for i in range(h_length):
+                if Map.masked_top_v_line(map, layer, x_pos + i, y_pos, v_length):
+                    return i
+        else:
+            for i in range(h_length, 0, -1): 
+                if Map.masked_top_v_line(map, layer, x_pos + i, y_pos, v_length):
+                    return i
+            
+        return h_length

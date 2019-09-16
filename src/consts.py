@@ -26,6 +26,7 @@ IMAGE_FOLDER = BASE_FOLDER + 'images/'
 WINDOW_TITLE = 'Must find (' + VERSION + ')'
 BG_COLOR = (0, 151, 230)
 GRAVITY_CONST = 0.375
+BASE_SPEED = 2
 
 KEYBOARD = {
     keys.K_UNKNOWN: 0,

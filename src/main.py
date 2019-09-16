@@ -3,7 +3,7 @@ Main file. Where the game starts.
 """
 import pygame
 
-from consts import WINDOW_TITLE, Screens, BG_COLOR
+from consts import Screens, WINDOW_TITLE, BG_COLOR, IMAGE_FOLDER
 from config import CONFIG
 from screens.main_menu import MainMenuScreen
 from screens.game import GameScreen

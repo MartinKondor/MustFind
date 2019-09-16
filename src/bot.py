@@ -9,5 +9,5 @@ class Bot:
         self.x_pos = x_pos
         self.y_pos = y_pos
 
-    def display(self, screen):
+    def display(self, screen, map):
         pass

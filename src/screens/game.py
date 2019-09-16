@@ -7,7 +7,7 @@ import pygame
 
 import map
 from .screen import Screen
-from consts import Screens, MAP_FOLDER
+from consts import Screens, MAP_FOLDER, IMAGE_FOLDER
 from config import CONFIG
 from player import Player
 from bot import Bot
@@ -28,12 +28,13 @@ class GameScreen(Screen):
         self.player = Player()
         self.bot = Bot()
         self.in_game_menu_bg = None
+        self.esc_key_held = False
 
         # In game menu elements
         button_margin = 50
         self.in_game_resume_button = SimpleButton(96, CONFIG.WINDOW_HEIGHT - 96 - 3 * button_margin, 'RESUME')
-        self.in_game_save_button = SimpleButton(96, CONFIG.WINDOW_HEIGHT - 96 - 3 * button_margin, 'SAVE')
-        self.in_game_exit_button = SimpleButton(96, CONFIG.WINDOW_HEIGHT - 96 - 3 * button_margin, 'EXIT')
+        self.in_game_save_button = SimpleButton(96, CONFIG.WINDOW_HEIGHT - 96 - 2 * button_margin, 'SAVE')
+        self.in_game_exit_button = SimpleButton(96, CONFIG.WINDOW_HEIGHT - 96 - button_margin, 'EXIT')
 
     def display_start_menu(self, screen):
         self.subscreen = GameSubScreen.GAME
@@ -47,32 +48,33 @@ class GameScreen(Screen):
 
         if self.in_game_exit_button.state == ButtonState.RELEASED:
             return Screens.MAIN_MENU
-        if self.in_game_resume_button.state == ButtonState.RELEASED:
+        elif self.in_game_resume_button.state == ButtonState.RELEASED:
+            self.subscreen = GameSubScreen.GAME
+            self.esc_key_held = True
             return Screens.GAME
-
         return Screens.GAME
 
-    def display_game(self, screen):
-        for event in pygame.event.get():
-            if event.type != pygame.KEYDOWN:
-                continue                        
-            if event.key == pygame.locals.K_ESCAPE:
-
-                # Save game screenshot as a background
-                self.in_game_menu_bg = pygame.Surface(screen.get_size())
-                self.subscreen = GameSubScreen.IN_GAME_MENU
-                return Screens.GAME
-
+    def display_game(self, screen):                      
         self.map.draw(screen, self.player, 0, 5)
-        self.bot.display(screen)
-        self.player.display(screen)
-        self.map.draw(screen, self.player, 5, 8)        
+        self.bot.display(screen, self.map)
+        self.player.display(screen, self.map)
+        self.map.draw(screen, self.player, 5, 8)
+
+        if pygame.key.get_pressed()[pygame.locals.K_ESCAPE]:
+
+            # Save game screenshot as a background
+            pygame.image.save(screen, IMAGE_FOLDER + 'screenshot.png')
+            self.in_game_menu_bg = pygame.image.load(IMAGE_FOLDER + 'screenshot.png')
+            self.in_game_menu_bg.set_alpha(150)
+
+            self.subscreen = GameSubScreen.IN_GAME_MENU
+            return Screens.GAME
         return Screens.GAME
 
     def display(self, screen):
         if self.subscreen == GameSubScreen.GAME:
             return self.display_game(screen)
-        if self.subscreen == GameSubScreen.START_MENU:
+        elif self.subscreen == GameSubScreen.START_MENU:
             return self.display_start_menu(screen)
         else:
             return self.display_in_game_menu(screen)
