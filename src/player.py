@@ -51,6 +51,17 @@ class Player:
     def collision_detection(self, map):
         pressed_keys = pygame.key.get_pressed()
 
+        ###########
+        # Check the sides of the player
+        dist_from_right = Map.masked_top_v_line(map, 4, self.x_pos + self.width / 2, self.y_pos, self.height / 2)
+        dist_from_left = Map.masked_top_v_line(map, 4, self.x_pos - self.width / 2, self.y_pos, self.height / 2)
+        
+        if dist_from_left == 0:            
+            self.x_speed -= BASE_SPEED
+        elif dist_from_right == 0:    
+            self.x_speed += BASE_SPEED
+        ###########
+
         # Check if the bottom of the player is masked
         on_ground = Map.is_masked_h_line(map, 4, self.x_pos, self.y_pos + self.height / 2, self.width / 2)
         if on_ground:
@@ -71,13 +82,12 @@ class Player:
             self.x_speed -= BASE_SPEED
         else:
             self.x_speed = 0
+
+            # Instead of stopping, slow down
             #if self.x_speed != 0 and self.x_speed < 0:
             #    self.x_speed += 2.5 * BASE_SPEED
             #elif self.x_speed != 0 and self.x_speed > 0:
             #    self.x_speed -= 2.5 * BASE_SPEED
-        
-        # Check the sides of the player
-        
 
         if self.x_speed > self.max_speed:
             self.x_speed = self.max_speed

@@ -45,10 +45,6 @@ if __name__ == '__main__':
     last_screen_enum = Screens.LOADING
     current_screen = LoadingScreen()
 
-    fps = 0
-    fps_counter = 0
-    start_time = time.time()
-
     # Main loop
     while current_screen_enum != Screens.EXIT and check_events():
         check_events()
@@ -70,12 +66,6 @@ if __name__ == '__main__':
                 current_screen = SettingsScreen(last_screen_enum)
 
             last_screen_enum = current_screen_enum
-
-        fps_counter += 1
-        fps = fps_counter / (time.time() - start_time)
-        if int(fps) > CONFIG.FPS_LIMIT:
-            # Slow down
-            time.sleep(0.01)
 
         pygame.display.update()
         pygame.display.flip()
