@@ -35,6 +35,7 @@ class Config:
         self.SOUND_VOLUME = 100
         self.MUSIC_VOLUME = 100
         self.FULLSCREEN = False
+        self.CURRENT_LEVEL = '0'
 
         # Create the file if it doesn't exists
         if not os.path.isfile(file_name):
@@ -77,6 +78,8 @@ class Config:
                 self.MUSIC_VOLUME = int(parts[1])
             if parts[0] == 'FULLSCREEN':
                 self.FULLSCREEN = parts[1] == 'True'
+            if parts[0] == 'CURRENT_LEVEL':
+                self.CURRENT_LEVEL = parts[1]
 
     def save(self, file_name=None):
         if file_name is not None:
@@ -95,6 +98,7 @@ class Config:
             file.write('SOUND_VOLUME=' + str(self.SOUND_VOLUME) + '\n')
             file.write('MUSIC_VOLUME=' + str(self.MUSIC_VOLUME) + '\n')
             file.write('FULLSCREEN=' + str(self.FULLSCREEN) + '\n')
+            file.write('CURRENT_LEVEL=' + str(self.CURRENT_LEVEL) + '\n')
 
 
 # Loading configuration

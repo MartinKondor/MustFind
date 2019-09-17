@@ -24,16 +24,16 @@ class GameScreen(Screen):
 
     def __init__(self):
         self.subscreen = GameSubScreen.START_MENU
-        self.map = map.Map(MAP_FOLDER + 'test.tcm')  # Stores the current map
+        self.map = map.Map(MAP_FOLDER + CONFIG.CURRENT_LEVEL + '.tcm')  # Stores the current map
         self.player = Player(len(self.map.layers[0].tiles) * 16, 0)
-        self.bot = Bot()
+        self.bot = Bot(len(self.map.layers[0].tiles) * 16, 0)
         self.in_game_menu_bg = None
 
         # In game menu elements
         button_margin = 50
-        self.in_game_resume_button = SimpleButton(96, CONFIG.WINDOW_HEIGHT - 96 - 3 * button_margin, 'RESUME')
-        self.in_game_save_button = SimpleButton(96, CONFIG.WINDOW_HEIGHT - 96 - 2 * button_margin, 'SAVE')
-        self.in_game_exit_button = SimpleButton(96, CONFIG.WINDOW_HEIGHT - 96 - button_margin, 'EXIT')
+        self.in_game_resume_button = SimpleButton(96, CONFIG.WINDOW_HEIGHT - 96 - 3 * button_margin, label='RESUME')
+        self.in_game_save_button = SimpleButton(96, CONFIG.WINDOW_HEIGHT - 96 - 2 * button_margin, label='SAVE')
+        self.in_game_exit_button = SimpleButton(96, CONFIG.WINDOW_HEIGHT - 96 - button_margin, label='EXIT')
 
     def display_start_menu(self, screen):
         self.subscreen = GameSubScreen.GAME
@@ -50,11 +50,14 @@ class GameScreen(Screen):
         elif self.in_game_resume_button.state == ButtonState.RELEASED:
             self.subscreen = GameSubScreen.GAME
             return Screens.GAME
+        elif self.in_game_save_button.state == ButtonState.RELEASED:
+            print('Save game')
+            return Screens.GAME
         return Screens.GAME
 
     def display_game(self, screen):                      
         self.map.draw(screen, self.player, 0, 5)
-        self.bot.display(screen, self.map)
+        self.bot.display(screen, self.map, self.player)
         self.player.display(screen, self.map)
         self.map.draw(screen, self.player, 5, 8)
 

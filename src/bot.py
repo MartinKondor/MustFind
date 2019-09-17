@@ -1,13 +1,127 @@
 """
 AI driven entity.
 """
+from enum import Enum
+
+import pygame
+
+from map import Map
+from config import CONFIG
+from consts import Screens, IMAGE_FOLDER, BASE_SPEED, GRAVITY_CONST
+
+
+class BotAnimationType:
+    BACK = 0
+    RIGHT = 1
+    FRONT = 2
+    LEFT = 3
+
+
+class BotMoveType(Enum):
+    UP = 0
+    RIGHT = 1
+    LEFT= 2
+    STAND = 3
 
 
 class Bot:
     
-    def __init__(self, x_pos=0, y_pos=0):
+    def __init__(self, x_pos=0, y_pos=0, x_speed=0, y_speed=0):
+        self.counter = 0
+        self.bot_move = BotMoveType.RIGHT
         self.x_pos = x_pos
         self.y_pos = y_pos
+        self.x_speed = x_speed
+        self.y_speed = y_speed
+        self.max_speed = 2
+        self.jump_count = 0
+        self.jump_limit = 1
+        self.jump_power = 7
+        self.width = 64
+        self.height = 64
+        self.animation_type = BotAnimationType.FRONT
+        self.animation_index = 0
+        self.animation_frames = []
 
-    def display(self, screen, map):
-        pass
+        # Get animation frames from image file
+        anim_img = pygame.image.load(IMAGE_FOLDER + 'bot.png')
+
+        for j in range(4):
+            anim_frames = []
+            for i in range(3):
+                anim_img.set_clip(pygame.Rect(i * self.width, j * self.height, self.width, self.height))
+                anim_frames.append(anim_img.subsurface(anim_img.get_clip()))
+            
+            self.animation_frames.append(anim_frames)
+
+    def collision_detection(self, map):
+        pressed_keys = pygame.key.get_pressed()
+
+        # Move on keypress
+        if pressed_keys[CONFIG.KEY_RIGHT]:
+            self.x_speed += BASE_SPEED
+        elif pressed_keys[CONFIG.KEY_LEFT]:
+            self.x_speed -= BASE_SPEED
+        else:
+            self.x_speed = 0
+
+        # Check if the bottom of the player is masked
+        on_ground = Map.is_masked_h_line(map, 4, self.x_pos, self.y_pos + self.height + self.y_speed, self.width / 2)
+        if on_ground:
+            self.y_speed = 0
+            self.jump_count = 0
+        elif self.y_speed < 25:  # Gravity
+            self.y_speed += GRAVITY_CONST
+
+        # Jumping
+        if on_ground and self.jump_count < self.jump_limit and pressed_keys[CONFIG.KEY_UP]:
+            self.y_speed -= self.jump_power
+            self.jump_count += 1
+            self.animation_type = BotAnimationType.FRONT
+
+        # Check the sides of the player
+        dist_from_right = Map.masked_top_v_line(map, 4, self.x_pos + self.width, self.y_pos, self.height)
+        dist_from_left = Map.masked_top_v_line(map, 4, self.x_pos - self.width, self.y_pos, self.height)
+        
+        if dist_from_left == 0:
+            self.y_speed = 0
+            if self.x_speed < 0:
+                self.x_speed = 0
+        if dist_from_right == 0:
+            self.y_speed = 0
+            if self.x_speed > 0:
+                self.x_speed = 0
+
+        # Check max speed
+        if self.x_speed > self.max_speed:
+            self.x_speed = self.max_speed
+        if self.x_speed < -self.max_speed:
+            self.x_speed = -self.max_speed
+
+        # Apply changes
+        self.x_pos += self.x_speed
+        self.y_pos += self.y_speed
+
+        # Change animation on direction change
+        if self.x_speed < 0:
+            self.animation_type = BotAnimationType.LEFT
+        elif self.x_speed > 0:
+            self.animation_type = BotAnimationType.RIGHT
+
+    def update_bot_state(self):
+        self.counter += 1
+
+        if self.counter == 100:
+            self.bot_move = BotMoveType.LEFT
+        elif self.counter == 200:
+            self.counter = 0
+            self.bot_move = BotMoveType.RIGHT
+
+    def display(self, screen, map, player):
+        self.collision_detection(map)
+        self.update_bot_state()
+
+        screen.blit(self.animation_frames[self.animation_type][self.animation_index], (self.x_pos - player.camera_x, self.y_pos - player.camera_y,))
+        self.animation_index += 1
+        if self.animation_index == len(self.animation_frames[0]):
+            self.animation_index = 0

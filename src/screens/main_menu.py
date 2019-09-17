@@ -17,14 +17,14 @@ class MainMenuScreen(Screen):
         self.logo_size = self.logo.get_rect().size
 
         button_margin = 50
-        self.singleplayer_button = SimpleButton(96, CONFIG.WINDOW_HEIGHT - 96 - 3 * button_margin, 'SINGLE PLAYER')
-        self.multiplayer_button = SimpleButton(96, CONFIG.WINDOW_HEIGHT - 96 - 2 * button_margin, 'MULTI PLAYER')
+        self.new_game_button = SimpleButton(96, CONFIG.WINDOW_HEIGHT - 96 - 3 * button_margin, 'NEW GAME')
+        self.load_game_button = SimpleButton(96, CONFIG.WINDOW_HEIGHT - 96 - 2 * button_margin, 'LOAD GAME')
         self.settings_button = SimpleButton(96, CONFIG.WINDOW_HEIGHT - 96 - button_margin, 'SETTINGS')
         self.exit_button = SimpleButton(96, CONFIG.WINDOW_HEIGHT - 96, 'EXIT')
 
     def display(self, screen):
-        self.singleplayer_button.display(screen)
-        self.multiplayer_button.display(screen)
+        self.new_game_button.display(screen)
+        self.load_game_button.display(screen)
         self.settings_button.display(screen)
         self.exit_button.display(screen)
         screen.blit(self.logo, (CONFIG.WINDOW_WIDTH - self.logo_size[0], 0))
@@ -32,10 +32,10 @@ class MainMenuScreen(Screen):
         # Check buttons
         if self.exit_button.state == ButtonState.RELEASED:
             return Screens.EXIT
-        if self.singleplayer_button.state == ButtonState.RELEASED:
+        if self.new_game_button.state == ButtonState.RELEASED:
             return Screens.GAME
-        if self.multiplayer_button.state == ButtonState.RELEASED:
-            return Screens.MULTIPLAYER_GAME
+        if self.load_game_button.state == ButtonState.RELEASED:
+            return Screens.LOAD_GAME
         if self.settings_button.state == ButtonState.RELEASED:
             return Screens.SETTINGS
 

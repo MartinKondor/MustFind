@@ -13,7 +13,7 @@ class Screens(Enum):
     MAIN_MENU = 2
     SETTINGS = 3
     GAME = 4
-    MULTIPLAYER_GAME = 5
+    LOAD_GAME = 5
 
 
 VERSION = '0.0.1-beta'
