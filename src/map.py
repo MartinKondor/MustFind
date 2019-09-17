@@ -87,8 +87,8 @@ class Map:
         Draw the tiles what the user can see.
         """
         for layer_index in range(from_layer_index, to_layer_index):
-            layer_offset_x = player.camera_x * self.layers[layer_index].x_speed
-            layer_offset_y = player.camera_y * self.layers[layer_index].y_speed
+            layer_offset_x = player.camera_x * self.layers[layer_index].x_speed + self.layers[layer_index].x_offset
+            layer_offset_y = player.camera_y * self.layers[layer_index].y_speed + self.layers[layer_index].y_offset
 
             for y, tiles in enumerate(self.layers[layer_index].tiles):
                 for x, tile in enumerate(tiles):

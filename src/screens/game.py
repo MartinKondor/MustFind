@@ -25,8 +25,8 @@ class GameScreen(Screen):
     def __init__(self):
         self.subscreen = GameSubScreen.START_MENU
         self.map = map.Map(MAP_FOLDER + CONFIG.CURRENT_LEVEL + '.tcm')  # Stores the current map
-        self.player = Player(len(self.map.layers[0].tiles) * 16, 0)
-        self.bot = Bot(len(self.map.layers[0].tiles) * 16, 0)
+        self.player = Player(len(self.map.layers[4].tiles[0]), 32)
+        self.bot = Bot(len(self.map.layers[4].tiles[0]) + 32, 32)
         self.in_game_menu_bg = None
 
         # In game menu elements

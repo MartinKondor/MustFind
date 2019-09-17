@@ -69,7 +69,7 @@ class Player:
             self.jump_count = 0
         elif not on_ground and self.y_speed < 25:  # Gravity
             self.y_speed += GRAVITY_CONST
- 
+
         # Jumping
         if on_ground and self.jump_count < self.jump_limit and pressed_keys[CONFIG.KEY_UP]:
             self.y_speed -= self.jump_power
