@@ -21,9 +21,15 @@ BASE_FOLDER = os.getcwd() + '/bin/'
 MAP_FOLDER = BASE_FOLDER + 'maps/'
 TILESET_FOLDER = BASE_FOLDER + 'tilesets/'
 IMAGE_FOLDER = BASE_FOLDER + 'images/'
+SAVE_FOLDER = BASE_FOLDER + 'saves/'
 
 WINDOW_TITLE = 'Must find (' + VERSION + ')'
+
+# Colors: http://paletton.com/#uid=33t0u0k++SpsoZRH8+V+VvU+1p9
 BG_COLOR = (0, 151, 230)
+BG_COLOR_2 = (255, 186, 0)
+BG_COLOR_3 = (255, 80, 29)
+
 GRAVITY_CONST = 0.375
 BASE_SPEED = 0.5
 

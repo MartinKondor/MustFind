@@ -5,7 +5,7 @@ from enum import Enum
 
 import pygame
 
-from consts import IMAGE_FOLDER, BG_COLOR
+from consts import IMAGE_FOLDER, BG_COLOR, BG_COLOR_2
 from config import CONFIG
 from resource_manager import RM
 
@@ -20,8 +20,8 @@ class ButtonState(Enum):
 class Button:
 
     def __init__(self, x_pos, y_pos, label, width=None, height=None,
-                font_color=(240, 240, 255), outline_color=(200, 200, 255),
-                outline_thickness=4, font_family=None):
+                font_color=(250, 250, 255), outline_color=BG_COLOR_2,#(200, 200, 255),
+                outline_thickness=8, font_family=None):
         self.state = ButtonState.NORMAL
         self.x_pos = x_pos
         self.y_pos = y_pos
@@ -73,3 +73,23 @@ class Button:
                                         self.width - self.outline_thickness,
                                         self.height - self.outline_thickness))
             screen.blit(self.label_sprite, (self.x_pos + self.width // 4, self.y_pos + self.height // 4))
+
+
+class List:
+
+    def __init__(self, x_pos, y_pos, label_list, font_family=None,
+                    font_color=(250, 250, 255)):
+        self.x_pos = x_pos
+        self.y_pos = y_pos
+        self.label_list = label_list
+        self.font_color = font_color
+        self.selected_index = 0
+
+        self.labels = [font_family.render(label, 1, self.font_color) \
+            if font_family is not None else RM.readable_font.render(label, 1, self.font_color) for label in self.label_list]
+        self.label_backgrounds = [pygame.Surface((10, 10,)) for label in label_list]
+
+    def display(self, screen):
+        for i, label in enumerate(self.labels):
+            screen.blit(self.label_backgrounds[i], (self.x_pos, self.y_pos,))
+            screen.blit(label, (self.x_pos, self.y_pos,))
