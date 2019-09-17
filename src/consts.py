@@ -16,7 +16,7 @@ class Screens(Enum):
     LOAD_GAME = 5
 
 
-VERSION = '0.0.1-beta'
+VERSION = 'v0.1.0-beta'
 BASE_FOLDER = os.getcwd() + '/bin/'
 
 MAP_FOLDER = BASE_FOLDER + 'maps/'
