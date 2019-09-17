@@ -90,40 +90,35 @@ class Map:
             layer_offset_x = player.camera_x * self.layers[layer_index].x_speed + self.layers[layer_index].x_offset
             layer_offset_y = player.camera_y * self.layers[layer_index].y_speed + self.layers[layer_index].y_offset
 
-            for y, tiles in enumerate(self.layers[layer_index].tiles):
-                for x, tile in enumerate(tiles):
-                    if tile == 0:
-                        continue
-
-                    screen.blit(self.tileset.tiles[tile], (x * 32 - layer_offset_x, y * 32 - layer_offset_y))
-        """
-        for layer_index in range(from_layer_index, to_layer_index):
-            layer_offset_x = player.camera_x# * self.layers[layer_index].x_speed
-            layer_offset_y = player.camera_y# * self.layers[layer_index].y_speed
-
-            start_x = int((player.camera_x + layer_offset_x) / 32 - 1)
+            start_x = layer_offset_x / 32 - 2
             if start_x < 0:
                 start_x = 0
-
-            start_y = int((player.camera_y + layer_offset_y) / 32 - 1)
+            
+            start_y = layer_offset_y / 32 - 2
             if start_y < 0:
                 start_y = 0
 
-            end_x = int((player.camera_x + CONFIG.WINDOW_WIDTH + layer_offset_x) / 32)
-            if end_x > len(self.layers[layer_index].tiles[0]) - 1:
+            end_x = int((CONFIG.WINDOW_WIDTH + layer_offset_x) / 32)
+            if end_x < len(self.layers[layer_index].tiles[0]) - 1:
                 end_x = len(self.layers[layer_index].tiles[0]) - 1
-            
-            end_y = int((player.camera_y + CONFIG.WINDOW_HEIGHT + layer_offset_y) / 32)
-            if end_y > len(self.layers[layer_index].tiles) - 1:
+
+            end_y = int((CONFIG.WINDOW_HEIGHT + layer_offset_y) / 32)
+            if end_y < len(self.layers[layer_index].tiles) - 1:
                 end_y = len(self.layers[layer_index].tiles) - 1
 
-            for y in range(start_y, end_y):  # len(self.layers[layer_index].tiles)
-                for x in range(start_x, end_x):  # len(self.layers[layer_index].tiles[y])
-                    if self.layers[layer_index].tiles[y][x] == 0:
-                        continue
+            for y, tiles in enumerate(self.layers[layer_index].tiles):
+                if y < start_y:
+                    continue
+                elif y > end_y:
+                    break
 
-                    screen.blit(self.tileset.tiles[self.layers[layer_index].tiles[y][x]], (x * 32 - layer_offset_x, y * 32 - layer_offset_y))
-        """
+                for x, tile in enumerate(tiles):
+                    if tile == 0 or x < start_x:
+                        continue
+                    elif x > end_x:
+                        break
+
+                    screen.blit(self.tileset.tiles[tile], (x * 32 - layer_offset_x, y * 32 - layer_offset_y))
 
     @staticmethod 
     def get_tile(map, layer, x_tile, y_tile):

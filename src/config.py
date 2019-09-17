@@ -5,9 +5,9 @@ Already declared as the ```CONFIG``` global variable.
 """
 import os
 
-from pygame import locals as keys
+from pygame import locals
 
-from consts import *
+from consts import BASE_FOLDER
 
 
 class Config:
@@ -17,18 +17,26 @@ class Config:
         Loading config form the given file
         """
         self.file_name = file_name
+        self.set_default()
+
+        if not os.path.isfile(file_name):
+            self.save(file_name)  # Create the file if it doesn't exists
+        else:
+            self.load(file_name)  # Start reading config from file
+
+    def set_default(self):
 
         # Set default attributes
         self.WINDOW_WIDTH = 800
         self.WINDOW_HEIGHT = 600
-        self.FPS_LIMIT = 30
+        self.FPS_LIMIT = 60
         self.CHARACTER_SIZE = 17
 
         # Keyboard configuration
-        self.KEY_UP = keys.K_w
-        self.KEY_DOWN = keys.K_s
-        self.KEY_LEFT = keys.K_a
-        self.KEY_RIGHT = keys.K_d
+        self.KEY_UP = locals.K_w
+        self.KEY_DOWN = locals.K_s
+        self.KEY_LEFT = locals.K_a
+        self.KEY_RIGHT = locals.K_d
 
         # Sound configuration
         self.MASTER_VOLUME = 100
@@ -36,13 +44,6 @@ class Config:
         self.MUSIC_VOLUME = 100
         self.FULLSCREEN = False
         self.CURRENT_LEVEL = '0'
-
-        # Create the file if it doesn't exists
-        if not os.path.isfile(file_name):
-            open(file_name, 'w+').close()
-        else:
-            # Start reading config from file
-            self.load(file_name)
 
     def load(self, file_name):
         file = open(file_name, 'r')
