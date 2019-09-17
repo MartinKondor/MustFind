@@ -70,7 +70,7 @@ if __name__ == '__main__':
             last_screen_enum = current_screen_enum
 
         game_clock.tick(CONFIG.FPS_LIMIT)
-        print('FPS:', int(game_clock.get_fps()))
+        # print('FPS:', int(game_clock.get_fps()))
 
         pygame.display.update()
         pygame.display.flip()

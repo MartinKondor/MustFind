@@ -7,7 +7,7 @@ import pygame
 from .screen import Screen
 from consts import Screens, KEYBOARD
 from config import CONFIG
-from gui.button import SimpleButton, ButtonState
+from gui import Button, ButtonState
 from resource_manager import RM
 
 
@@ -16,21 +16,21 @@ class SettingsScreen(Screen):
     def __init__(self, last_screen_enum=None):
         self.last_screen_enum = last_screen_enum
 
-        label_margin = 75 
+        label_margin = 75
         self.labels = [
             (RM.readable_font.render('CONTROLS', 1, (255, 255, 255)), (75, 50),),
-            (RM.readable_font.render('Up', 1, (255, 255, 255)), (75, 50 + 2 * label_margin),),
-            (RM.readable_font.render('Down', 1, (255, 255, 255)), (75, 50 + 3 * label_margin),),
-            (RM.readable_font.render('Right', 1, (255, 255, 255)), (75, 50 + 4 * label_margin),),
-            (RM.readable_font.render('Left', 1, (255, 255, 255)), (75, 50 + 5 * label_margin),)
+            (RM.readable_font.render('UP', 1, (240, 240, 240)), (75, 50 + 2 * label_margin),),
+            (RM.readable_font.render('DOWN', 1, (240, 240, 240)), (75, 50 + 3 * label_margin),),
+            (RM.readable_font.render('RIGHT', 1, (240, 240, 240)), (75, 50 + 4 * label_margin),),
+            (RM.readable_font.render('LEFT', 1, (240, 240, 240)), (75, 50 + 5 * label_margin),)
         ]
         self.buttons = [
-            (SimpleButton(2 * 75, 40 + 2 * label_margin, label=pygame.key.name(CONFIG.KEY_UP), font_family=RM.readable_font), 'Up'),
-            (SimpleButton(2 * 75, 40 + 3 * label_margin, label=pygame.key.name(CONFIG.KEY_DOWN), font_family=RM.readable_font), 'Down'),
-            (SimpleButton(2 * 75, 40 + 4 * label_margin, label=pygame.key.name(CONFIG.KEY_RIGHT), font_family=RM.readable_font), 'Right'),
-            (SimpleButton(2 * 75, 40 + 5 * label_margin, label=pygame.key.name(CONFIG.KEY_LEFT), font_family=RM.readable_font), 'Left')
+            (Button(2 * 75, 40 + 2 * label_margin, label=pygame.key.name(CONFIG.KEY_UP), font_family=RM.readable_font), 'Up'),
+            (Button(2 * 75, 40 + 3 * label_margin, label=pygame.key.name(CONFIG.KEY_DOWN), font_family=RM.readable_font), 'Down'),
+            (Button(2 * 75, 40 + 4 * label_margin, label=pygame.key.name(CONFIG.KEY_RIGHT), font_family=RM.readable_font), 'Right'),
+            (Button(2 * 75, 40 + 5 * label_margin, label=pygame.key.name(CONFIG.KEY_LEFT), font_family=RM.readable_font), 'Left')
         ]
-        self.back_button = SimpleButton(50, CONFIG.WINDOW_HEIGHT - 4 * CONFIG.CHARACTER_SIZE, label='BACK')
+        self.back_button = Button(50, CONFIG.WINDOW_HEIGHT - 4 * CONFIG.CHARACTER_SIZE, label='BACK')
 
     def check_for_choosing_key(self, button, label):
         if button.state == ButtonState.RELEASED:

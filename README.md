@@ -9,7 +9,7 @@ Whatever happends you must find your other half!
 ```py
 bin/  # Stores images, maps and this kind of things for the game
 src/ # The source code
-    ...
+    screens/ # Containing the subscreens of the game
 ```
 
 # Contributing

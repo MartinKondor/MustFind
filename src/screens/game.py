@@ -1,6 +1,7 @@
 """
 Game screen where we show the game.
 """
+from threading import Thread
 from enum import Enum
 
 import pygame
@@ -11,7 +12,7 @@ from consts import Screens, MAP_FOLDER, IMAGE_FOLDER
 from config import CONFIG
 from player import Player
 from bot import Bot
-from gui.button import SimpleButton, ButtonState
+from gui import Button, ButtonState
 
 
 class GameSubScreen(Enum):
@@ -31,9 +32,9 @@ class GameScreen(Screen):
 
         # In game menu elements
         button_margin = 50
-        self.in_game_resume_button = SimpleButton(96, CONFIG.WINDOW_HEIGHT - 96 - 3 * button_margin, label='RESUME')
-        self.in_game_save_button = SimpleButton(96, CONFIG.WINDOW_HEIGHT - 96 - 2 * button_margin, label='SAVE')
-        self.in_game_exit_button = SimpleButton(96, CONFIG.WINDOW_HEIGHT - 96 - button_margin, label='EXIT')
+        self.in_game_resume_button = Button(96, CONFIG.WINDOW_HEIGHT - 96 - 3 * button_margin, label='RESUME')
+        self.in_game_save_button = Button(96, CONFIG.WINDOW_HEIGHT - 96 - 2 * button_margin, label='SAVE')
+        self.in_game_exit_button = Button(96, CONFIG.WINDOW_HEIGHT - 96 - button_margin, label='EXIT')
 
     def display_start_menu(self, screen):
         self.subscreen = GameSubScreen.GAME
@@ -55,7 +56,7 @@ class GameScreen(Screen):
             return Screens.GAME
         return Screens.GAME
 
-    def display_game(self, screen):                      
+    def display_game(self, screen):
         self.map.draw(screen, self.player, 0, 5)
         self.bot.display(screen, self.map, self.player)
         self.player.display(screen, self.map)

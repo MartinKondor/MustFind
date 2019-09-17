@@ -27,7 +27,6 @@ class BotMoveType(Enum):
 class Bot:
     
     def __init__(self, x_pos=0, y_pos=0, x_speed=0, y_speed=0):
-        self.counter = 0
         self.bot_move = BotMoveType.RIGHT
         self.x_pos = x_pos
         self.y_pos = y_pos
@@ -55,12 +54,11 @@ class Bot:
             self.animation_frames.append(anim_frames)
 
     def collision_detection(self, map):
-        pressed_keys = pygame.key.get_pressed()
 
         # Move on keypress
-        if pressed_keys[CONFIG.KEY_RIGHT]:
+        if self.bot_move == BotMoveType.RIGHT:
             self.x_speed += BASE_SPEED
-        elif pressed_keys[CONFIG.KEY_LEFT]:
+        elif self.bot_move == BotMoveType.LEFT:
             self.x_speed -= BASE_SPEED
         else:
             self.x_speed = 0
@@ -74,20 +72,17 @@ class Bot:
             self.y_speed += GRAVITY_CONST
 
         # Jumping
-        if on_ground and self.jump_count < self.jump_limit and pressed_keys[CONFIG.KEY_UP]:
+        if on_ground and self.jump_count < self.jump_limit and self.bot_move == BotMoveType.UP:
             self.y_speed -= self.jump_power
             self.jump_count += 1
             self.animation_type = BotAnimationType.FRONT
 
-        # Check the sides of the player
-        dist_from_right = Map.masked_top_v_line(map, 4, self.x_pos + self.width, self.y_pos, self.height)
-        dist_from_left = Map.masked_top_v_line(map, 4, self.x_pos - self.width, self.y_pos, self.height)
-        
-        if dist_from_left == 0:
+        # Check the sides of the bot        
+        if Map.masked_top_v_line(map, 4, self.x_pos - self.width, self.y_pos, self.height) == 0:
             self.y_speed = 0
             if self.x_speed < 0:
                 self.x_speed = 0
-        if dist_from_right == 0:
+        elif Map.masked_top_v_line(map, 4, self.x_pos + self.width, self.y_pos, self.height) == 0:
             self.y_speed = 0
             if self.x_speed > 0:
                 self.x_speed = 0
@@ -95,7 +90,7 @@ class Bot:
         # Check max speed
         if self.x_speed > self.max_speed:
             self.x_speed = self.max_speed
-        if self.x_speed < -self.max_speed:
+        elif self.x_speed < -self.max_speed:
             self.x_speed = -self.max_speed
 
         # Apply changes
@@ -109,13 +104,7 @@ class Bot:
             self.animation_type = BotAnimationType.RIGHT
 
     def update_bot_state(self):
-        self.counter += 1
-
-        if self.counter == 100:
-            self.bot_move = BotMoveType.LEFT
-        elif self.counter == 200:
-            self.counter = 0
-            self.bot_move = BotMoveType.RIGHT
+        self.bot_move = BotMoveType.UP  # Just jump for now
 
     def display(self, screen, map, player):
         self.collision_detection(map)

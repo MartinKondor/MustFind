@@ -86,9 +86,11 @@ class Map:
         """
         Draw the tiles what the user can see.
         """
-        for layer_index in range(from_layer_index, to_layer_index):
-            layer_offset_x = player.camera_x * self.layers[layer_index].x_speed + self.layers[layer_index].x_offset
-            layer_offset_y = player.camera_y * self.layers[layer_index].y_speed + self.layers[layer_index].y_offset
+        for layer in self.layers[from_layer_index:to_layer_index]:
+            layer_offset_x = player.camera_x * layer.x_speed + layer.x_offset
+            layer_offset_y = player.camera_y * layer.y_speed + layer.y_offset
+            layer_width = len(layer.tiles[0])
+            layer_height = len(layer.tiles)
 
             start_x = layer_offset_x / 32 - 2
             if start_x < 0:
@@ -98,15 +100,15 @@ class Map:
             if start_y < 0:
                 start_y = 0
 
-            end_x = int((CONFIG.WINDOW_WIDTH + layer_offset_x) / 32)
-            if end_x < len(self.layers[layer_index].tiles[0]) - 1:
-                end_x = len(self.layers[layer_index].tiles[0]) - 1
+            end_x = (CONFIG.WINDOW_WIDTH + layer_offset_x) / 32
+            if end_x < layer_width - 1:
+                end_x = layer_width - 1
 
-            end_y = int((CONFIG.WINDOW_HEIGHT + layer_offset_y) / 32)
-            if end_y < len(self.layers[layer_index].tiles) - 1:
-                end_y = len(self.layers[layer_index].tiles) - 1
+            end_y = (CONFIG.WINDOW_HEIGHT + layer_offset_y) / 32
+            if end_y < layer_height - 1:
+                end_y = layer_height - 1
 
-            for y, tiles in enumerate(self.layers[layer_index].tiles):
+            for y, tiles in enumerate(layer.tiles):
                 if y < start_y:
                     continue
                 elif y > end_y:
@@ -118,7 +120,7 @@ class Map:
                     elif x > end_x:
                         break
 
-                    screen.blit(self.tileset.tiles[tile], (x * 32 - layer_offset_x, y * 32 - layer_offset_y))
+                    screen.blit(self.tileset.tiles[tile], (x * 32 - layer_offset_x, y * 32 - layer_offset_y,))
 
     @staticmethod 
     def get_tile(map, layer, x_tile, y_tile):
