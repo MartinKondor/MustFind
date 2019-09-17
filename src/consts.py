@@ -13,7 +13,6 @@ class Screens(Enum):
     MAIN_MENU = 2
     SETTINGS = 3
     GAME = 4
-    LOAD_GAME = 5
 
 
 VERSION = 'v0.1.0-beta'

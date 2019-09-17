@@ -35,7 +35,13 @@ if __name__ == '__main__':
 
     # Starting the game
     pygame.init()
-    screen = pygame.display.set_mode((CONFIG.WINDOW_WIDTH, CONFIG.WINDOW_HEIGHT))
+    
+    if CONFIG.FULLSCREEN:
+        screen = pygame.display.set_mode((CONFIG.WINDOW_WIDTH, CONFIG.WINDOW_HEIGHT), pygame.FULLSCREEN)
+    else:
+        screen = pygame.display.set_mode((CONFIG.WINDOW_WIDTH, CONFIG.WINDOW_HEIGHT))
+    
+    pygame.display.set_icon(pygame.image.load(IMAGE_FOLDER + 'icon.png'))
     pygame.display.set_caption(WINDOW_TITLE)
     pygame.mouse.set_visible(1)
     RM.load(pygame)
@@ -44,12 +50,10 @@ if __name__ == '__main__':
     current_screen_enum = Screens.LOADING
     last_screen_enum = Screens.LOADING
     current_screen = LoadingScreen()
-
     game_clock = pygame.time.Clock()
 
     # Main loop
     while current_screen_enum != Screens.EXIT and check_events():
-        check_events()
 
         if current_screen_enum == Screens.GAME:
             screen.fill((0, 0, 0))
@@ -71,7 +75,6 @@ if __name__ == '__main__':
 
         game_clock.tick(CONFIG.FPS_LIMIT)
         # print('FPS:', int(game_clock.get_fps()))
-
         pygame.display.update()
         pygame.display.flip()
 

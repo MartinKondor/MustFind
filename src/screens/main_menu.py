@@ -8,6 +8,7 @@ from consts import Screens, IMAGE_FOLDER
 from config import CONFIG
 from gui import Button, ButtonState
 from resource_manager import RM
+from game import ChooseGameWindow
 
 
 class MainMenuScreen(Screen):
@@ -23,11 +24,11 @@ class MainMenuScreen(Screen):
         self.exit_button = Button(96, CONFIG.WINDOW_HEIGHT - 96, 'EXIT')
 
     def display(self, screen):
+        screen.blit(self.logo, (CONFIG.WINDOW_WIDTH - self.logo_size[0], 0,))
         self.new_game_button.display(screen)
         self.load_game_button.display(screen)
         self.settings_button.display(screen)
         self.exit_button.display(screen)
-        screen.blit(self.logo, (CONFIG.WINDOW_WIDTH - self.logo_size[0], 0))
 
         # Check buttons
         if self.exit_button.state == ButtonState.RELEASED:
@@ -35,7 +36,7 @@ class MainMenuScreen(Screen):
         if self.new_game_button.state == ButtonState.RELEASED:
             return Screens.GAME
         if self.load_game_button.state == ButtonState.RELEASED:
-            return Screens.LOAD_GAME
+            return Screens.GAME
         if self.settings_button.state == ButtonState.RELEASED:
             return Screens.SETTINGS
 

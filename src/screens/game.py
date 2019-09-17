@@ -29,11 +29,13 @@ class GameScreen(Screen):
         self.player = Player(len(self.map.layers[4].tiles[0]), 32)
         self.bot = Bot(len(self.map.layers[4].tiles[0]) + 32, 32)
         self.in_game_menu_bg = None
+        self.game_is_saved = False
 
         # In game menu elements
         button_margin = 50
-        self.in_game_resume_button = Button(96, CONFIG.WINDOW_HEIGHT - 96 - 3 * button_margin, label='RESUME')
-        self.in_game_save_button = Button(96, CONFIG.WINDOW_HEIGHT - 96 - 2 * button_margin, label='SAVE')
+        self.in_game_resume_button = Button(96, CONFIG.WINDOW_HEIGHT - 96 - 4 * button_margin, label='RESUME')
+        self.in_game_save_button = Button(96, CONFIG.WINDOW_HEIGHT - 96 - 3 * button_margin, label='SAVE GAME')
+        self.in_game_load_button = Button(96, CONFIG.WINDOW_HEIGHT - 96 - 2 * button_margin, label='LOAD GAME')
         self.in_game_exit_button = Button(96, CONFIG.WINDOW_HEIGHT - 96 - button_margin, label='EXIT')
 
     def display_start_menu(self, screen):
@@ -44,6 +46,7 @@ class GameScreen(Screen):
         screen.blit(self.in_game_menu_bg, (0, 0))
         self.in_game_resume_button.display(screen)
         self.in_game_save_button.display(screen)
+        self.in_game_load_button.display(screen)
         self.in_game_exit_button.display(screen)
 
         if self.in_game_exit_button.state == ButtonState.RELEASED:
@@ -53,6 +56,9 @@ class GameScreen(Screen):
             return Screens.GAME
         elif self.in_game_save_button.state == ButtonState.RELEASED:
             print('Save game')
+            return Screens.GAME
+        elif self.in_game_load_button.state == ButtonState.RELEASED:
+            print('Load game')
             return Screens.GAME
         return Screens.GAME
 

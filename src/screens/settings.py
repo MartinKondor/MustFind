@@ -65,7 +65,7 @@ class SettingsScreen(Screen):
         for button, button_label in self.buttons:
             self.check_for_choosing_key(button, button_label)
             button.display(screen)
-
+            
         self.back_button.display(screen)
 
         if self.back_button.state == ButtonState.RELEASED:
