@@ -44,7 +44,7 @@ Ways to contribute:
 
 * **[Martin Kondor](https://github.com/MartinKondor)**
 
-# License
+<p align="center"><a href="https://www.patreon.com/bePatron?u=17006186" data-patreon-widget-type="become-patron-button"><img width="222" class="img-responsive" alt="Become a Patron!" title="Become a Patron!" src="https://martinkondor.github.io/img/become_a_patron_button.png"></a></p>
 
 ## License
 
