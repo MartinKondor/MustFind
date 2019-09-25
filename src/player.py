@@ -6,13 +6,7 @@ import pygame
 from map import Map
 from consts import Screens, IMAGE_FOLDER, BASE_SPEED, GRAVITY_CONST
 from config import CONFIG
-
-
-class PlayerAnimationType:
-    BACK = 0
-    RIGHT = 1
-    FRONT = 2
-    LEFT = 3
+from animation import Animation, AnimationType
 
 
 class Player:
@@ -30,20 +24,7 @@ class Player:
         self.jump_power = 7
         self.width = 64
         self.height = 64
-        self.animation_type = PlayerAnimationType.FRONT
-        self.animation_index = 0
-        self.animation_frames = []
-
-        # Get animation frames from image file
-        anim_img = pygame.image.load(IMAGE_FOLDER + 'player.png')
-
-        for j in range(4):
-            anim_frames = []
-            for i in range(3):
-                anim_img.set_clip(pygame.Rect(i * self.width, j * self.height, self.width, self.height))
-                anim_frames.append(anim_img.subsurface(anim_img.get_clip()))
-            
-            self.animation_frames.append(anim_frames)
+        self.animation = Animation(IMAGE_FOLDER + 'player.png', self.width, self.height)
 
     def collision_detection(self, map):
         pressed_keys = pygame.key.get_pressed()
@@ -74,7 +55,7 @@ class Player:
         if on_ground and self.jump_count < self.jump_limit and pressed_keys[CONFIG.KEY_UP]:
             self.y_speed -= self.jump_power
             self.jump_count += 1
-            self.animation_type = PlayerAnimationType.FRONT
+            self.animation.animation_type = AnimationType.FRONT
 
         # Check the sides of the player
         dist_from_right = Map.masked_top_v_line(map, 4, self.x_pos + self.width / 2, self.y_pos, self.height)
@@ -103,16 +84,12 @@ class Player:
 
         # Change animation on direction change
         if self.x_speed < 0:
-            self.animation_type = PlayerAnimationType.LEFT
+            self.animation.animation_type = AnimationType.LEFT
         elif self.x_speed > 0:
-            self.animation_type = PlayerAnimationType.RIGHT
+            self.animation.animation_type = AnimationType.RIGHT
+        elif self.x_speed == 0 and self.y_speed == 0:
+            self.animation.animation_type = AnimationType.STAND
 
     def display(self, screen, map):
         self.collision_detection(map)
-
-        screen.blit(self.animation_frames[self.animation_type][self.animation_index],
-                    (self.x_pos - self.camera_x - self.width / 2, self.y_pos - self.camera_y - self.height / 2,))
-        
-        self.animation_index += 1
-        if self.animation_index == len(self.animation_frames[0]):
-            self.animation_index = 0
+        self.animation.play(screen, self)

@@ -5,7 +5,7 @@ import os
 
 import pygame
 
-import map
+from map import Map
 from config import CONFIG
 from consts import BG_COLOR_2, SAVE_FOLDER
 from gui import List, Button, ButtonState
@@ -84,4 +84,4 @@ def load_save_game(game):
         elif parts[0] == 'bot.y_pos':
             game.bot.y_pos = float(parts[1])
         if parts[0] == 'map.file_name':
-            game.map = map.Map(parts[1])
+            game.map = Map(parts[1])

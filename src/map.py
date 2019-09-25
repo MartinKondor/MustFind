@@ -146,7 +146,7 @@ class Map:
             x_tile = tile_at_coords % 10
             y_tile = int(tile_at_coords / 10)
             return bool(map.tileset.mask[y_tile * 32 + y_pos % 32][x_tile * 32 + x_pos % 32])
-        return True
+        return None  # In case the x_pos or y_pos tries to go outside the map
 
     @staticmethod
     def is_masked_h_line(map, layer, x_pos, y_pos, length):

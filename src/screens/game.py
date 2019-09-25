@@ -6,7 +6,7 @@ from enum import Enum
 
 import pygame
 
-import map
+from map import Map
 from .screen import Screen
 from consts import Screens, MAP_FOLDER, IMAGE_FOLDER
 from config import CONFIG
@@ -26,7 +26,7 @@ class GameScreen(Screen):
 
     def __init__(self):
         self.subscreen = GameSubScreen.START_MENU
-        self.map = map.Map(MAP_FOLDER + CONFIG.CURRENT_LEVEL + '.tcm')  # Stores the current map
+        self.map = Map(MAP_FOLDER + CONFIG.CURRENT_LEVEL + '.tcm')  # Stores the current map
         self.player = Player(len(self.map.layers[4].tiles[0]), 32)
         self.bot = Bot(len(self.map.layers[4].tiles[0]) + 32, 32)
         self.in_game_menu_bg = None
@@ -62,7 +62,7 @@ class GameScreen(Screen):
 
     def display_game(self, screen):
         self.map.draw(screen, self.player, 0, 5)
-        # self.bot.display(screen, self.map, self.player)
+        self.bot.display(screen, self.map, self.player)
         self.player.display(screen, self.map)
         self.map.draw(screen, self.player, 5, 8)
 

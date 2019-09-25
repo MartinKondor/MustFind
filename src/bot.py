@@ -8,13 +8,7 @@ import pygame
 from map import Map
 from config import CONFIG
 from consts import Screens, IMAGE_FOLDER, BASE_SPEED, GRAVITY_CONST
-
-
-class BotAnimationType:
-    BACK = 0
-    RIGHT = 1
-    FRONT = 2
-    LEFT = 3
+from animation import Animation, BotAnimationType
 
 
 class BotMoveType(Enum):
@@ -36,22 +30,11 @@ class Bot:
         self.jump_count = 0
         self.jump_limit = 1
         self.jump_power = 7
+        self.camera_x = 0
+        self.camera_y = 0
         self.width = 64
         self.height = 64
-        self.animation_type = BotAnimationType.FRONT
-        self.animation_index = 0
-        self.animation_frames = []
-
-        # Get animation frames from image file
-        anim_img = pygame.image.load(IMAGE_FOLDER + 'bot.png')
-
-        for j in range(4):
-            anim_frames = []
-            for i in range(3):
-                anim_img.set_clip(pygame.Rect(i * self.width, j * self.height, self.width, self.height))
-                anim_frames.append(anim_img.subsurface(anim_img.get_clip()))
-            
-            self.animation_frames.append(anim_frames)
+        self.animation = Animation(IMAGE_FOLDER + 'player.png', self.width, self.height)
 
     def collision_detection(self, map):
 
@@ -75,7 +58,7 @@ class Bot:
         if on_ground and self.jump_count < self.jump_limit and self.bot_move == BotMoveType.UP:
             self.y_speed -= self.jump_power
             self.jump_count += 1
-            self.animation_type = BotAnimationType.FRONT
+            self.animation.animation_type = BotAnimationType.FRONT
 
         # Check the sides of the bot        
         if Map.masked_top_v_line(map, 4, self.x_pos - self.width, self.y_pos, self.height) == 0:
@@ -99,18 +82,19 @@ class Bot:
 
         # Change animation on direction change
         if self.x_speed < 0:
-            self.animation_type = BotAnimationType.LEFT
+            self.animation.animation_type = BotAnimationType.LEFT
         elif self.x_speed > 0:
-            self.animation_type = BotAnimationType.RIGHT
+            self.animation.animation_type = BotAnimationType.RIGHT
+        elif self.x_speed == 0 and self.y_speed == 0:
+            self.animation.animation_type = BotAnimationType.STAND
 
     def update_bot_state(self):
         self.bot_move = BotMoveType.UP  # Just jump for now
 
     def display(self, screen, map, player):
+        self.camera_x = player.camera_x
+        self.camera_y = player.camera_y
+
         self.collision_detection(map)
         self.update_bot_state()
-
-        screen.blit(self.animation_frames[self.animation_type][self.animation_index], (self.x_pos - player.camera_x, self.y_pos - player.camera_y,))
-        self.animation_index += 1
-        if self.animation_index == len(self.animation_frames[0]):
-            self.animation_index = 0
+        self.animation.play(screen, self)

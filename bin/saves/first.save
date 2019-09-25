@@ -1,5 +1,5 @@
-player.x_pos=723.0
-player.y_pos=297.125
-bot.x_pos=132
-bot.y_pos=32
+player.x_pos=815.0
+player.y_pos=266.125
+bot.x_pos=132.5
+bot.y_pos=281.75
 map.file_name=D:\Projects\MustFind/bin/maps/0.tcm
