@@ -39,6 +39,7 @@ class GameScreen(Screen):
 
         if CONFIG.SAVE_GAME != '':
             load_save_game(self)
+            CONFIG.SAVE_GAME = ''
 
     def display_start_menu(self, screen):
         self.subscreen = GameSubScreen.GAME

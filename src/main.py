@@ -14,7 +14,6 @@ from screens.loading import LoadingScreen
 from resource_manager import RM
 
 
-
 def check_events():
     """
     :returns bool: false if game must be exited

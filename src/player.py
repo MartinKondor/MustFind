@@ -52,6 +52,7 @@ class Player:
             self.y_speed += GRAVITY_CONST
 
         # Jumping
+        on_ground = Map.is_masked_h_line(map, 4, self.x_pos, self.y_pos + self.height / 2 + self.y_speed / 2, self.width / 2)
         if on_ground and self.jump_count < self.jump_limit and pressed_keys[CONFIG.KEY_UP]:
             self.y_speed -= self.jump_power
             self.jump_count += 1
