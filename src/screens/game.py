@@ -13,6 +13,7 @@ from config import CONFIG
 from player import Player
 from bot import Bot
 from gui import Button, ButtonState
+from game_utils import save_game, load_save_game
 
 
 class GameSubScreen(Enum):
@@ -29,14 +30,15 @@ class GameScreen(Screen):
         self.player = Player(len(self.map.layers[4].tiles[0]), 32)
         self.bot = Bot(len(self.map.layers[4].tiles[0]) + 32, 32)
         self.in_game_menu_bg = None
-        self.game_is_saved = False
 
         # In game menu elements
         button_margin = 50
-        self.in_game_resume_button = Button(96, CONFIG.WINDOW_HEIGHT - 96 - 4 * button_margin, label='RESUME')
-        self.in_game_save_button = Button(96, CONFIG.WINDOW_HEIGHT - 96 - 3 * button_margin, label='SAVE GAME')
-        self.in_game_load_button = Button(96, CONFIG.WINDOW_HEIGHT - 96 - 2 * button_margin, label='LOAD GAME')
+        self.in_game_resume_button = Button(96, CONFIG.WINDOW_HEIGHT - 96 - 3 * button_margin, label='RESUME')
+        self.in_game_save_button = Button(96, CONFIG.WINDOW_HEIGHT - 96 - 2 * button_margin, label='SAVE GAME')
         self.in_game_exit_button = Button(96, CONFIG.WINDOW_HEIGHT - 96 - button_margin, label='EXIT')
+
+        if CONFIG.SAVE_GAME != '':
+            load_save_game(self)
 
     def display_start_menu(self, screen):
         self.subscreen = GameSubScreen.GAME
@@ -46,7 +48,6 @@ class GameScreen(Screen):
         screen.blit(self.in_game_menu_bg, (0, 0))
         self.in_game_resume_button.display(screen)
         self.in_game_save_button.display(screen)
-        self.in_game_load_button.display(screen)
         self.in_game_exit_button.display(screen)
 
         if self.in_game_exit_button.state == ButtonState.RELEASED:
@@ -55,16 +56,13 @@ class GameScreen(Screen):
             self.subscreen = GameSubScreen.GAME
             return Screens.GAME
         elif self.in_game_save_button.state == ButtonState.RELEASED:
-            print('Save game')
-            return Screens.GAME
-        elif self.in_game_load_button.state == ButtonState.RELEASED:
-            print('Load game')
+            save_game(self)
             return Screens.GAME
         return Screens.GAME
 
     def display_game(self, screen):
         self.map.draw(screen, self.player, 0, 5)
-        self.bot.display(screen, self.map, self.player)
+        # self.bot.display(screen, self.map, self.player)
         self.player.display(screen, self.map)
         self.map.draw(screen, self.player, 5, 8)
 

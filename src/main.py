@@ -35,12 +35,13 @@ if __name__ == '__main__':
 
     # Starting the game
     pygame.init()
-    
+    screen_size = (CONFIG.WINDOW_WIDTH, CONFIG.WINDOW_HEIGHT,)
+
     if CONFIG.FULLSCREEN:
-        screen = pygame.display.set_mode((CONFIG.WINDOW_WIDTH, CONFIG.WINDOW_HEIGHT), pygame.FULLSCREEN)
+        screen = pygame.display.set_mode(screen_size, pygame.FULLSCREEN)
     else:
-        screen = pygame.display.set_mode((CONFIG.WINDOW_WIDTH, CONFIG.WINDOW_HEIGHT))
-    
+        screen = pygame.display.set_mode(screen_size)
+
     pygame.display.set_icon(pygame.image.load(IMAGE_FOLDER + 'icon.png'))
     pygame.display.set_caption(WINDOW_TITLE)
     pygame.mouse.set_visible(1)

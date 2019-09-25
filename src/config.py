@@ -45,6 +45,8 @@ class Config:
         self.FULLSCREEN = False
         self.CURRENT_LEVEL = '0'
 
+        self.SAVE_GAME = ''  # Str for storing the name of the current save game
+
     def load(self, file_name):
         file = open(file_name, 'r')
         lines = file.read()

@@ -83,13 +83,39 @@ class List:
         self.y_pos = y_pos
         self.label_list = label_list
         self.font_color = font_color
-        self.selected_index = 0
+        self.box_color = (12, 63, 124,)
+        self.box_hover_color = (83, 133, 193,)
+        self.box_selected_color = (255, 131, 60,)
+        self.selected_index = -1
 
         self.labels = [font_family.render(label, 1, self.font_color) \
             if font_family is not None else RM.readable_font.render(label, 1, self.font_color) for label in self.label_list]
-        self.label_backgrounds = [pygame.Surface((10, 10,)) for label in label_list]
+        self.label_backgrounds = [
+            pygame.Surface((len(label) * CONFIG.CHARACTER_SIZE + 2 * CONFIG.CHARACTER_SIZE, 1.5 * CONFIG.CHARACTER_SIZE,))
+            for label in label_list]
+
+        for label_background in self.label_backgrounds:
+            label_background.fill(self.box_color)
 
     def display(self, screen):
+        mouse_pos = pygame.mouse.get_pos()
+
         for i, label in enumerate(self.labels):
-            screen.blit(self.label_backgrounds[i], (self.x_pos, self.y_pos,))
-            screen.blit(label, (self.x_pos, self.y_pos,))
+            bg_x = 25 + self.x_pos / 2
+            bg_y = i * 33 + self.y_pos / 2
+
+            if mouse_pos[0] > bg_x and mouse_pos[1] > bg_y and \
+                    mouse_pos[0] < bg_x + self.label_backgrounds[i].get_width() and \
+                    mouse_pos[1] < bg_y + self.label_backgrounds[i].get_height():
+                self.label_backgrounds[i].fill(self.box_hover_color)
+
+                if pygame.mouse.get_pressed()[0]:
+                    self.selected_index = i
+
+            elif self.selected_index == i:
+                self.label_backgrounds[i].fill(self.box_selected_color)
+            else:
+                self.label_backgrounds[i].fill(self.box_color)
+
+            screen.blit(self.label_backgrounds[i], (bg_x, bg_y,))
+            screen.blit(label, (bg_x, bg_y,))

@@ -22,6 +22,7 @@ class Map:
     """
 
     def __init__(self, file_name):
+        self.file_name = file_name
         self.tileset = Tileset()
         self.layers = []
 

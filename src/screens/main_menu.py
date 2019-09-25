@@ -8,7 +8,7 @@ from consts import Screens, IMAGE_FOLDER
 from config import CONFIG
 from gui import Button, ButtonState
 from resource_manager import RM
-from game import LoadGameWindow
+from game_utils import LoadGameWindow
 
 
 class MainMenuScreen(Screen):
@@ -34,6 +34,11 @@ class MainMenuScreen(Screen):
 
         if self.show_game_loader:
             self.show_game_loader = self.game_loader.display(screen)
+        else:
+            if self.game_loader.file_list.selected_index != -1:
+                CONFIG.SAVE_GAME = self.game_loader.list[self.game_loader.file_list.selected_index] + '.save'
+                self.game_loader.file_list.selected_index = -1  # Unselect the current save file
+                return Screens.GAME
 
         # Check buttons
         if self.exit_button.state == ButtonState.RELEASED:
