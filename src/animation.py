@@ -48,3 +48,6 @@ class Animation:
 
             if self.animation_index == len(self.animation_frames[0]):
                 self.animation_index = 0
+
+    def get_frame(self):
+        return self.animation_frames[self.animation_type][self.animation_index]
