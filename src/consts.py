@@ -16,7 +16,7 @@ class Screens(Enum):
 
 
 VERSION = 'v0.1.0-beta'
-BASE_FOLDER = os.getcwd() + '/bin/'
+BASE_FOLDER = '../bin/'
 
 MAP_FOLDER = BASE_FOLDER + 'maps/'
 TILESET_FOLDER = BASE_FOLDER + 'tilesets/'
